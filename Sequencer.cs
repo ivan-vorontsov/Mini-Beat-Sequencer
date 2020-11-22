@@ -13,7 +13,7 @@ namespace MiniSequencer
         int bpm;
         int bars = 16;
         int bar;
-        Timer timer;
+        System.Threading.Timer timer;
         DateTime previousTime;
         MidiOut midi;
         double time;
@@ -69,17 +69,14 @@ namespace MiniSequencer
             Stop();
             bar = 0;
             midi = new MidiOut(0);
-            timer = new Timer();
-            timer.Interval = 1000 / 60;
-            timer.Elapsed += Timer_Elapsed;
-            timer.Start();
             previousTime = DateTime.Now;
+            timer = new System.Threading.Timer(Timer_Elapsed, null, 0, 1000 / 60);
             PlayBar();
         }
 
-        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
+        private void Timer_Elapsed(object state)
         {
-            var time = e.SignalTime;
+            var time = DateTime.Now;
             var delta = (time - previousTime).TotalMilliseconds;
             previousTime = time;
 
