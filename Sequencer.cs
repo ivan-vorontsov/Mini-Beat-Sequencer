@@ -1,6 +1,7 @@
 ﻿using NAudio.Midi;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Timers;
 
@@ -35,9 +36,11 @@ namespace MiniSequencer
             }
         }
 
+        class InvalidWaitHandle: WaitHandle { }
+
         internal void Stop()
         {
-            if (timer != null) timer.Dispose();
+            if (timer != null) timer.Dispose(new InvalidWaitHandle());
             if (midi != null) midi.Dispose();
         }
 
